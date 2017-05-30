@@ -128,16 +128,14 @@ Le résultat attendu devra ressembler à la fenêtre suivante :
 ![IHM](screenshoot.png)
 
 
-#### Exercice 1
-
-##### Implémentation de la classe `Joueur`
+#### Exercice 1 : Implémentation de la classe `Joueur`
 La classe `Joueur` permet de conserver les informations sur les deux joueurs d'une partie d'Othello. 
 Cette classe a la responsabilité principale de gérer le score des joueurs.
 
 1. Écrire la classe `Joueur` ayant pour commencer, deux données membres privées. La première appelée `score` sera de 
-  type `int`. La seconde `icon` de type `Icon` permettra de conserver l'image affichée dans les cases de l'othellier.
+  type `int`. La seconde `image` de type `Image` permettra de conserver l'image affichée dans les cases de l'othellier.
 
-2. Écrire le constructeur `Joueur(String fileName)` qui crée l'`ImageIcon` à partir du nom de fichier passé en paramètre
+2. Écrire le constructeur `Joueur(String fileName)` qui crée l'`Image` à partir du nom de fichier passé en paramètre
    et initialise le score à 0.
    
 3. Écrire les accesseurs `public int getScore()` et `public Icon getIcon()`  qui retournent la valeur des données 
@@ -149,16 +147,14 @@ Cette classe a la responsabilité principale de gérer le score des joueurs.
 5. Les joueurs étant connus à l'avance (`BLANC` et `NOIR`), leur création peut être faite de manière statique. 
 Pour éviter d'avoir à complexifier notre code avec des valeurs nulles, un joueur virtuel (`PERSONNE`) sera ajouté. 
 Écrire la déclaration statiques des 3 Joueurs (`BLANC`, `NOIR`, `PERSONNE`) qui devront utiliser les images appelées 
-"blanc.png", "noir.png" et "vide.png".
+"blanc.png", "noir.png" et "vide.png" situé dans les ressources.
 
 6. Écrire la méthode `public Joueur suivant()` qui retourne le joueur `BLANC` si le joueur est `NOIR` et `NOIR` si le 
 joueur est `BLANC`. L'appel de cette méthode sur tout autre joueur retourne `PERSONNE`. 
 
 7. Écrire la méthode `public static void initialiserScores()` qui initialise à 0 les scores des joueurs `BLANC` et `NOIR`.
 
-#### Exercice 2
-
-### Implémentation de la classe `Case`
+#### Exercice 2 : Implémentation de la classe `Case`
 Pour réaliser le plateau de jeu, il nous faut des boutons qui se souviennent de leur position dans l'othellier. 
 Au moment de leur construction, de tels boutons reçoivent les valeurs des indices ligne et colonne 
 qui définissent leur placement dans la matrice. Ils les mémoriseront dans des variables d’instance privées. En 
@@ -167,7 +163,7 @@ plus de ces coordonnées, il faut connaître le joueur qui possède la case pour
 Écrire la classe publique `Case` qui représente les boutons de notre tableau de jeu. Cette classe aura les 
 caractéristiques suivantes :
 
-- Elle étend la classe `JButton`.
+- Elle étend la classe `Button`.
 
 - Elle contient deux données membres privée de type `int` nommées `ligne` et `colonne` pour mémoriser les coordonnées. 
 
@@ -179,16 +175,12 @@ correspondantes. Par défaut, une case n'appartient à PERSONNE.
 - Elle possède trois getters :  `public Joueur getPossesseur()`, `public int getLigne()` et  `public int getColonne()`.
 
 - Elle possède un setter `public void setPossesseur(Joueur possesseur)`, qui modifie la donnée membre correspondante et 
-modifie l'icône du bouton en utilisant la méthode `setIcon(ImageIcon icon)` héritée de la classe `JButton`.
+modifie l'image du bouton en utilisant la méthode `setImage(Image image)` sur la donnée membre `imageView`.
  
-#### Exercice 3
+#### Exercice 3 : Implémentation de la classe `Othellier`
+Cette classe est celle qui permet d'implémenter toute la logique du jeu. 
 
-##### Implémentation de la classe `Othellier`
-Cette classe est celle qui permet d'implémenter toute la logique du jeu. Elle est celle qui 
-demanderait le plus de travail dans une implémentation complète. Dans votre cas, vous n'aurez pas à implémenter 
-les méthodes qui calculeront les pions capturés par une action d'un joueur.
-
-1. Écrire la classe `Othellier` qui dérive de `JPanel`. Cette classe aura les données membres privées suivantes : 
+1. Écrire la classe `Othellier` qui dérive de `GridPane`. Cette classe aura les données membres privées suivantes : 
      - `taille` de type `int` qui mémorise la taille du plateau de jeu.
      - `cases` est une matrice de `taille x taille` `Case` qui représente le plateau de jeu.
      - `joueurCourant` de type `Joueur` qui mémorise le joueur dont c'est le tour.
@@ -203,9 +195,6 @@ Ce constructeur devra :
     - mémoriser le paramètre taille dans la donnée membre correspondante.
     
     - créer la matrice `cases` avec `taille` lignes et `taille` colonnes.
-    
-    - ajouter un `GridLayout` comme gestionnaire de disposition qui disposera les cases de l'othellier. 
-    Les étiquettes des lignes (1, 2, ...) et des colonnes (a, b, ...) ne figureront pas sur l'interface.
      
     - créer toutes les cases de la matrice et les ajouter à l'othellier.
     
@@ -252,19 +241,19 @@ Cette classe se réduit à la méthode imposée `public void actionPerformed(Act
     
 On notera qu'une unique instance de cette classe doit être ajoutée comme auditeur de toutes les cases.
 
-#### Exercice 4
+11. Écrire la méthode `private List<Case> casesCapturables(Case caseSelectionnee)` qui retourne la liste des cases 
+capturables si le `joueurCourant` dépose un jeton sur la case `caseSelectionnee`. Cette méthode vérifie dans toute 
+les directions quel est l'ensemble des cases capturables.
 
-##### Implémentation de la classe `StatusBar`
+#### Exercice 4 : Implémentation de la classe `StatusBar`
 La classe `StatusBar` est un composant graphique permettant d'afficher l'état de la partie en cours. 
 
-
-#### Exercice 5
-##### Implémentation de la classe `OthelloIHM`
+#### Exercice 5 : Implémentation de la classe `OthelloIHM`
 La classe `OthelloIHM` représente la fenêtre principale du Jeu. En plus d'un othellier situé au centre, cette fenêtre 
 contient une barre de menu et une barre de statut en bas. La barre de menu contient un menu "Action" constitué d'une 
 entrée "Nouvelle Partie" et d'une entrée "Quitter".
 
-1. Écrire la déclaration d’une classe `OthelloIHM`, sous-classe de `JFrame`, réduite, pour commencer, à 
+1. Écrire la déclaration d’une classe `OthelloIHM`, sous-classe de `Application`, réduite, pour commencer, à 
 ses variables d’instance, toutes privées :
     - `TAILLE` de type `int` représente la taille l'othellier
 
@@ -272,24 +261,23 @@ ses variables d’instance, toutes privées :
 
     - `othellier` de type `Othellier` est l'objet plateau de jeu
 
-2. Écrire la méthode  `private JMenuBar barreDeMenus()` qui s'occupe de créer la barre de menu.
+2. Écrire la méthode  `private MenuBar barreDeMenus()` qui s'occupe de créer la barre de menu.
 
 3. Écrire le constructeur par défaut de la classe `OthelloIHM`. Ce constructeur devra :
     - Modifier le titre de la fenêtre en "Othello".
 
-    - Définir que l'application devra se terminer quand on fermera la fenêtre.
+    - Ajouter un `BorderPane` comme gestionnaire de disposition.
 
-    - Ajouter un `BorderLayout` comme gestionnaire de disposition.
+    - Ajouter la barre de menu en haut.
 
-    - Ajouter la barre de menu.
+    - Placer l'othellier au centre .
 
-    - Placer l'othellier au centre de la fenêtre.
+    - Placer la barre de statut en bas.
 
-    - Placer la barre de statut au sud de la fenêtre.
+    - Rendre visible le stage.
 
-    - Demander à la fenêtre de prendre sa taille optimale et la rendre visible
-
-4. Écrire la méthode `public void updateStatus()` qui s'occupe de mettre à jour la barre de statut à partir de l'état courant de l'othellier. Cette méthode devra :
+4. Écrire la méthode `public void updateStatus()` qui s'occupe de mettre à jour la barre de statut à partir de l'état 
+courant de l'othellier. Cette méthode devra :
 
     - tout d'abord vérifier si le `joueurCourant` de l'othellier est positionné à `PERSONNE` pour ouvrir un dialogue annonçant la fin de partie
 

@@ -29,6 +29,7 @@ class Othellier extends GridPane {
     private Case[][] cases;
     private Joueur joueurCourant = Joueur.NOIR;
     private OthelloIHM pere;
+
     private final  EventHandler<ActionEvent> caseListener = new EventHandler<ActionEvent>() {
         @Override
         public void handle(ActionEvent event) {
