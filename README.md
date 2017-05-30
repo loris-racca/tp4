@@ -125,7 +125,7 @@ Il y aura aussi plusieurs classes de moindre importance qui serviront d'outils p
 
 Le résultat attendu devra ressembler à la fenêtre suivante :
 
-![IHM](screenshoot.png)
+![IHM](src/main/resources/assets/screenshoot.png)
 
 
 #### Exercice 1 : Implémentation de la classe `Joueur`
