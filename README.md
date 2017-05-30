@@ -10,13 +10,14 @@
     * Consulter et/ou créér des [issues](https://github.com/IUTInfoAix-M2105/tp1/issues).
     * [Email](mailto:sebastien.nedjar@univ-amu.fr) pour une question d'ordre privée, ou pour convenir d'un rendez-vous physique.
 
-## TP 3 :  Propriétés, Binding et le FXML [![Build Status](https://travis-ci.com/IUTInfoAix-M2105/tp3.svg?token=zPXgu159amQhEb4ShTxW)](https://travis-ci.com/IUTInfoAix-M2105/tp3)
+## TP 4 :  Ecriture d'un Reversi [![Build Status](https://travis-ci.com/IUTInfoAix-M2105/tp4.svg?token=zPXgu159amQhEb4ShTxW)](https://travis-ci.com/IUTInfoAix-M2105/tp4)
 
 JavaFX 8.0 regroupe un ensemble d'API de Java 8 Standard Edition permettant le développement rapide d'applications graphiques modernes (aussi bien que des jeux 3D !). JavaFX 8.0 est tellement riche que sa 
 [documentation](https://docs.oracle.com/javase/8/javafx/api/toc.htm) se trouve à part de celle de 
 [Java 8](https://docs.oracle.com/javase/8/docs/api/index.html?overview-summary.html) (qui inclut celle de ses prédécesseurs AWT et Swing), bien qu'il fasse partie intégrante de Java 8.
 
 Ce TP continue l'exploration des mécanismes clefs de JavaFX 8.0.
+
 #### Création de votre fork du TP
 
 La première chose que vous allez faire est de créer un fork d'un dépôt. Pour ce faire, rendez-vous sur le lien suivant : 
@@ -29,8 +30,6 @@ Vous apparaîtrez automatiquement comme contributeur de ce projet pour y pousser
 Une fois votre fork créé, il vous suffit de l'importer dans IntelliJ.
 
 ### Première étape : écriture d'une IHM complète
-
-#### Exercice 1
 
 L'objet de cet exercice est l'écriture en Java de l'IHM d'une version simplifiée du jeu Othello. C' est un jeu de société combinatoire abstrait, qui oppose deux joueurs. 
 
@@ -112,6 +111,9 @@ Le résultat attendu devra ressembler à la fenêtre suivante :
 
 ![IHM](screenshoot.png)
 
+
+#### Exercice 1
+
 ##### Implémentation de la classe `Joueur`
 La classe `Joueur` permet de conserver les informations sur les deux joueurs d'une partie d'Othello. Cette classe a la responsabilité principale de gérer le score des joueurs.
 
@@ -123,6 +125,7 @@ La classe `Joueur` permet de conserver les informations sur les deux joueurs d'u
 6. Écrire la méthode `public Joueur suivant()` qui retourne le joueur `BLANC` si le joueur est `NOIR` et `NOIR` si le joueur est `BLANC`. L'appel de cette méthode sur tout autre joueur retourne `PERSONNE`. 
 7. Écrire la méthode `public static void initialiserScores()` qui initialise à 0 les scores des joueurs `BLANC` et `NOIR`.
 
+#### Exercice 2
 
 ### Implémentation de la classe `Case`
 Pour réaliser le plateau de jeu, il nous faut des boutons qui se souviennent de leur position dans l'othellier. 
@@ -138,6 +141,7 @@ plus de ces coordonnées, il faut connaître le joueur qui possède la case pour
 - Elle possède trois getters :  `public Joueur getPossesseur()`, `public int getLigne()` et  `public int getColonne()`.
 - Elle possède un setter `public void setPossesseur(Joueur possesseur)`, qui modifie la donnée membre correspondante et modifie l'icône du bouton en utilisant la méthode `setIcon(ImageIcon icon)` héritée de la classe `JButton`.
  
+#### Exercice 3
 
 ##### Implémentation de la classe `Othellier`
 Cette classe est celle qui permet d'implémenter toute la logique du jeu. Elle est celle qui 
@@ -170,6 +174,8 @@ Cette classe se réduit à la méthode imposée `public void actionPerformed(Act
     - capturer toutes les cases capturables.
     - choisir le prochain joueur qui doit jouer.
 On notera qu'une unique instance de cette classe doit être ajoutée comme auditeur de toutes les cases.
+
+#### Exercice 4
 
 ##### Implémentation de la classe `StatusBar`
 La classe `StatusBar` est un composant graphique permettant d'afficher l'état de la partie en cours. 
@@ -214,6 +220,8 @@ class StatusBar extends JPanel {
     }
 }
 ```
+
+#### Exercice 5
 ##### Implémentation de la classe `OthelloIHM`
 La classe `OthelloIHM` représente la fenêtre principale du Jeu. En plus d'un othellier situé au centre, cette fenêtre contient une barre 
 de menu et une barre de statut en bas. La barre de menu contient un menu "Action" constitué d'une entrée "Nouvelle Partie" et d'une entrée "Quitter".
