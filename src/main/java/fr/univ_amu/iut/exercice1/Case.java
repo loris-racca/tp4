@@ -20,6 +20,8 @@ class Case extends Button {
         setMaxSize(500, 500);
 
         setGraphic(imageView);
+        imageView.fitHeightProperty().bind(this.heightProperty());
+        imageView.fitWidthProperty().bind(this.widthProperty());
     }
 
     public Joueur getPossesseur() {

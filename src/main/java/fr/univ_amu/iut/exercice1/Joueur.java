@@ -3,8 +3,8 @@ package fr.univ_amu.iut.exercice1;
 import javafx.scene.image.Image;
 
 public enum Joueur {
-    NOIR("assets/noir.png"),
-    BLANC("assets/blanc.png"),
+    NOIR("assets/noirgrand.png"),
+    BLANC("assets/blancgrand.png"),
     PERSONNE("assets/vide.png");
 
     private final Image image;
