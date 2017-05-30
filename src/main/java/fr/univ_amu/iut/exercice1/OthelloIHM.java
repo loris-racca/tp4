@@ -1,13 +1,13 @@
 package fr.univ_amu.iut.exercice1;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+
+import java.util.Optional;
 
 import static javafx.scene.control.Alert.AlertType;
 
@@ -33,6 +33,11 @@ public class OthelloIHM extends Application {
         root.setBottom(statusBar);
         root.setTop(barreDeMenus());
         Scene scene = new Scene(root);
+
+        primaryStage.setOnCloseRequest(event -> {
+            this.actionMenuJeuQuitter();
+            event.consume();
+        });
 
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -89,10 +94,22 @@ public class OthelloIHM extends Application {
     }
 
     private void actionMenuJeuQuitter() {
-
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation");
+        alert.setContentText("Êtes vous certain de vouloir quitter l'application ?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            Platform.exit();
+        }
     }
 
     private void actionMenuJeuNouveau() {
-        othellier.nouvellePartie();
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation");
+        alert.setContentText("Êtes vous certain de vouloir créer une nouvelle partie ?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            othellier.nouvellePartie();
+        }
     }
 }

@@ -4,7 +4,10 @@ package fr.univ_amu.iut.exercice1;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.RowConstraints;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,8 +44,13 @@ class Othellier extends GridPane {
     public Othellier(OthelloIHM pere, int taille) {
         this.pere = pere;
         this.taille = taille;
-        cases = new Case[taille][taille];
+        remplirOthelier(taille);
+        adapterLesLignesEtColonnes();
+        positionnerPionsDebutPartie();
+    }
 
+    private void remplirOthelier(int taille) {
+        cases = new Case[taille][taille];
         for (int i = 0; i < taille; i++) {
             for (int j = 0; j < taille; j++) {
                 cases[i][j] = new Case(i, j);
@@ -50,7 +58,20 @@ class Othellier extends GridPane {
                 add(cases[i][j],i,j);
             }
         }
-        positionnerPionsDebutPartie();
+    }
+
+    private void adapterLesLignesEtColonnes() {
+        for (int i = 0; i < taille; i++) {
+            ColumnConstraints column = new ColumnConstraints();
+            column.setHgrow(Priority.ALWAYS);
+            getColumnConstraints().add(column);
+        }
+
+        for (int i = 0; i < taille; i++) {
+            RowConstraints row = new RowConstraints();
+            row.setVgrow(Priority.ALWAYS);
+            getRowConstraints().add(row);
+        }
     }
 
     private void positionnerPionsDebutPartie() {
@@ -74,7 +95,7 @@ class Othellier extends GridPane {
         pere.updateStatus();
     }
 
-    public boolean peutJouer() {
+    private boolean peutJouer() {
         return !casesJouables().isEmpty();
     }
 

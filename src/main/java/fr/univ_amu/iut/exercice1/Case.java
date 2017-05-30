@@ -15,7 +15,10 @@ class Case extends Button {
         this.possesseur = Joueur.PERSONNE;
         this.imageView = new ImageView();
 
+        setMinSize(50, 50);
         setPrefSize(50, 50);
+        setMaxSize(500, 500);
+
         setGraphic(imageView);
     }
 
