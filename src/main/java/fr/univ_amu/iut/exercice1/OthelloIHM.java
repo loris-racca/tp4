@@ -1,16 +1,15 @@
 package fr.univ_amu.iut.exercice1;
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
-import java.util.Optional;
-
-import static javafx.scene.control.Alert.*;
+import static javafx.scene.control.Alert.AlertType;
 
 
 public class OthelloIHM extends Application {
@@ -19,6 +18,9 @@ public class OthelloIHM extends Application {
     private StatusBar statusBar;
     private Othellier othellier;
 
+    public static void main(String[] args) {
+        launch(args);
+    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -55,10 +57,10 @@ public class OthelloIHM extends Application {
         else
             messageFinDePartie = "Égalité !!!";
 
-        Alert alert = new Alert(AlertType.CONFIRMATION);
-        alert.setTitle("Confirmation Dialog");
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("Fin de partie");
         alert.setContentText(messageFinDePartie);
-        Optional<ButtonType> result = alert.showAndWait();
+        alert.showAndWait();
     }
 
     private MenuBar barreDeMenus() {
@@ -92,9 +94,5 @@ public class OthelloIHM extends Application {
 
     private void actionMenuJeuNouveau() {
         othellier.nouvellePartie();
-    }
-
-    public static void main(String[] args) {
-        launch(args);
     }
 }

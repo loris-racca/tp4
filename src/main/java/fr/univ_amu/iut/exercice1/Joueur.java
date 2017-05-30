@@ -1,18 +1,23 @@
 package fr.univ_amu.iut.exercice1;
 
-import javafx.scene.image.ImageView;
+import javafx.scene.image.Image;
 
 public enum Joueur {
     NOIR("assets/noir.png"),
     BLANC("assets/blanc.png"),
     PERSONNE("assets/vide.png");
 
-    private final ImageView image;
+    private final Image image;
     private int score;
 
     Joueur(String fileName) {
-        image = new ImageView(getClass().getClassLoader().getResource(fileName).toExternalForm());
+        image = new Image(getClass().getClassLoader().getResource(fileName).toExternalForm());
         score = 0;
+    }
+
+    public static void initialiserScores() {
+        BLANC.initialiserScore();
+        NOIR.initialiserScore();
     }
 
     public int getScore() {
@@ -27,7 +32,7 @@ public enum Joueur {
         score++;
     }
 
-    public ImageView getImage() {
+    public Image getImage() {
         return image;
     }
 
@@ -41,10 +46,5 @@ public enum Joueur {
 
     private void initialiserScore() {
         score = 0;
-    }
-
-    public static void initialiserScores() {
-        BLANC.initialiserScore();
-        NOIR.initialiserScore();
     }
 }

@@ -5,6 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.layout.GridPane;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +22,10 @@ class Othellier extends GridPane {
             new Point2D(0, -1),
             new Point2D(1, -1)
     };
-
+    private int taille;
+    private Case[][] cases;
+    private Joueur joueurCourant = Joueur.NOIR;
+    private OthelloIHM pere;
     private final  EventHandler<ActionEvent> caseListener = new EventHandler<ActionEvent>() {
         @Override
         public void handle(ActionEvent event) {
@@ -34,13 +38,7 @@ class Othellier extends GridPane {
         }
     };
 
-    private int taille;
-    private Case[][] cases;
-    private Joueur joueurCourant = Joueur.NOIR;
-    private OthelloIHM pere;
-
     public Othellier(OthelloIHM pere, int taille) {
-        super();
         this.pere = pere;
         this.taille = taille;
         cases = new Case[taille][taille];
