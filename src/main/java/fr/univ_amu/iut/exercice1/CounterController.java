@@ -5,10 +5,14 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
-public class CounterController {
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class CounterController implements Initializable {
 
     IntegerProperty counter = new SimpleIntegerProperty(0);
 
@@ -33,5 +37,12 @@ public class CounterController {
 
     public IntegerProperty counterProperty() {
         return counter;
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        System.out.println("Initializing SayHelloController...");
+        System.out.println("Location = " + location);
+        System.out.println("Resources = " + resources);
     }
 }
