@@ -1,4 +1,4 @@
-package fr.univ_amu.iut.exercice1;
+package fr.univ_amu.iut.exercice3;
 
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
@@ -12,12 +12,10 @@ class StatusBar extends BorderPane {
     private static final String SCORE_NOIR = "Noir : ";
     private static final String SCORE_BLANC = "Blanc : ";
     private static final String MESSAGE_TOUR_FIN_PARTIE = "Partie Terminée";
-
-    private Joueur joueurCourant = Joueur.NOIR;
-
     private final Label messageScoreNoir = new Label("");
     private final Label messageScoreBlanc = new Label("");
     private final Label messageTourDeJeu = new Label("");
+    private Joueur joueurCourant = Joueur.NOIR;
 
     public StatusBar() {
         super();
