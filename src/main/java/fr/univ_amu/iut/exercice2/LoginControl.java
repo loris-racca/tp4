@@ -31,7 +31,7 @@ public class LoginControl extends GridPane {
 
     @FXML
     private void initialize() {
-        // Do some work
+
     }
 
     @FXML

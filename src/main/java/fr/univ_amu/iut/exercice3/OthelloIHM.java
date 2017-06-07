@@ -47,9 +47,7 @@ public class OthelloIHM extends Application {
         if (othellier.getJoueurCourant() == Joueur.PERSONNE) {
             afficheDialogFinDePartie();
         }
-
         statusBar.setJoueurCourant(othellier.getJoueurCourant());
-        statusBar.updateStatus();
     }
 
     private void afficheDialogFinDePartie() {

@@ -1,5 +1,7 @@
 package fr.univ_amu.iut.exercice3;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.image.Image;
 
 public enum Joueur {
@@ -8,11 +10,11 @@ public enum Joueur {
     PERSONNE("assets/vide.png");
 
     private final Image image;
-    private int score;
+    private IntegerProperty score;
 
     Joueur(String fileName) {
         image = new Image(getClass().getClassLoader().getResource(fileName).toExternalForm());
-        score = 0;
+        score = new SimpleIntegerProperty();
     }
 
     public static void initialiserScores() {
@@ -20,16 +22,20 @@ public enum Joueur {
         NOIR.initialiserScore();
     }
 
-    public int getScore() {
+    public IntegerProperty scoreProperty() {
         return score;
     }
 
+    public int getScore() {
+        return score.get();
+    }
+
     public void decrementerScore() {
-        score--;
+        score.set(score.get() - 1);
     }
 
     public void incrementerScore() {
-        score++;
+        score.set(score.get() - 1);
     }
 
     public Image getImage() {
@@ -45,6 +51,6 @@ public enum Joueur {
     }
 
     private void initialiserScore() {
-        score = 0;
+        score.set(0);
     }
 }
