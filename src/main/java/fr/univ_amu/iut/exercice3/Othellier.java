@@ -1,6 +1,8 @@
 package fr.univ_amu.iut.exercice3;
 
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
@@ -13,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-class Othellier extends GridPane {
+public class Othellier extends GridPane {
 
     private static final Point2D[] directions = {
             new Point2D(1, 0),
@@ -27,27 +29,25 @@ class Othellier extends GridPane {
     };
     private int taille;
     private Case[][] cases;
-    private Joueur joueurCourant = Joueur.NOIR;
-    private OthelloIHM pere;
+    private ObjectProperty<Joueur> joueurCourant = new SimpleObjectProperty<>(Joueur.NOIR);
 
-    private final  EventHandler<ActionEvent> caseListener = new EventHandler<ActionEvent>() {
-        @Override
-        public void handle(ActionEvent event) {
-            Case caseSelectionnee = (Case) event.getSource();
-            if (estPositionJouable(caseSelectionnee)) {
-                capturer(caseSelectionnee);
-                tourSuivant();
-                pere.updateStatus();
-            }
+    private final EventHandler<ActionEvent> caseListener = event -> {
+        Case caseSelectionnee = (Case) event.getSource();
+        if (estPositionJouable(caseSelectionnee)) {
+            capturer(caseSelectionnee);
+            tourSuivant();
         }
     };
 
-    public Othellier(OthelloIHM pere, int taille) {
-        this.pere = pere;
-        this.taille = taille;
+    public Othellier() {
+        this.taille = 8;
         remplirOthelier(taille);
         adapterLesLignesEtColonnes();
         positionnerPionsDebutPartie();
+    }
+
+    public ObjectProperty<Joueur> joueurCourantProperty() {
+        return joueurCourant;
     }
 
     private void remplirOthelier(int taille) {
@@ -56,7 +56,7 @@ class Othellier extends GridPane {
             for (int j = 0; j < taille; j++) {
                 cases[i][j] = new Case(i, j);
                 cases[i][j].setOnAction(caseListener);
-                add(cases[i][j],i,j);
+                add(cases[i][j], i, j);
             }
         }
     }
@@ -89,11 +89,10 @@ class Othellier extends GridPane {
 
 
     public void nouvellePartie() {
-        joueurCourant = Joueur.NOIR;
+        joueurCourant.set(Joueur.NOIR);
         Joueur.initialiserScores();
         vider();
         positionnerPionsDebutPartie();
-        pere.updateStatus();
     }
 
     private boolean peutJouer() {
@@ -129,7 +128,7 @@ class Othellier extends GridPane {
         int indiceColonne = caseSelectionnee.getColonne() + (int) direction.getX();
 
         while (estIndicesValides(indiceLigne, indiceColonne)) {
-            if (cases[indiceLigne][indiceColonne].getPossesseur() != joueurCourant.suivant())
+            if (cases[indiceLigne][indiceColonne].getPossesseur() != joueurCourant.get().suivant())
                 break;
 
             casesCapturable.add(cases[indiceLigne][indiceColonne]);
@@ -139,7 +138,7 @@ class Othellier extends GridPane {
         }
 
         if (estIndicesValides(indiceLigne, indiceColonne) &&
-                cases[indiceLigne][indiceColonne].getPossesseur() == joueurCourant)
+                cases[indiceLigne][indiceColonne].getPossesseur() == joueurCourant.get())
             return casesCapturable;
         return new ArrayList<>();
     }
@@ -157,27 +156,27 @@ class Othellier extends GridPane {
     }
 
     private void capturer(Case caseCapturee) {
-        caseCapturee.setPossesseur(joueurCourant);
-        joueurCourant.incrementerScore();
+        caseCapturee.setPossesseur(joueurCourant.get());
+        joueurCourant.get().incrementerScore();
 
         List<Case> casesCapturees = casesCapturable(caseCapturee);
         for (Case caseCourante : casesCapturees) {
-            caseCourante.setPossesseur(joueurCourant);
-            joueurCourant.incrementerScore();
-            joueurCourant.suivant().decrementerScore();
+            caseCourante.setPossesseur(joueurCourant.get());
+            joueurCourant.get().incrementerScore();
+            joueurCourant.get().suivant().decrementerScore();
         }
     }
 
     public Joueur getJoueurCourant() {
-        return joueurCourant;
+        return joueurCourant.get();
     }
 
     private void tourSuivant() {
-        joueurCourant = joueurCourant.suivant();
+        joueurCourant.set(joueurCourant.get().suivant());
         if (!peutJouer()) {
-            joueurCourant = joueurCourant.suivant();
+            joueurCourant.set(joueurCourant.get().suivant());
             if (!peutJouer())
-                joueurCourant = Joueur.PERSONNE;
+                joueurCourant.set(Joueur.PERSONNE);
         }
     }
 

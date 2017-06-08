@@ -69,8 +69,17 @@ public class StatusBar extends BorderPane implements Initializable {
 
     }
 
+    public Joueur getJoueurCourant() {
+        return joueurCourant.get();
+    }
+
     public void setJoueurCourant(Joueur joueurCourant) {
         this.joueurCourant.set(joueurCourant);
     }
+
+    public ObjectProperty<Joueur> joueurCourantProperty() {
+        return joueurCourant;
+    }
+
 
 }

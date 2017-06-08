@@ -9,6 +9,7 @@ class Case extends Button {
     private int colonne;
     private Joueur possesseur;
     private ImageView imageView;
+
     public Case(int ligne, int colonne) {
         this.colonne = colonne;
         this.ligne = ligne;

@@ -26,6 +26,10 @@ public enum Joueur {
         return score;
     }
 
+    private void initialiserScore() {
+        score.set(0);
+    }
+
     public int getScore() {
         return score.get();
     }
@@ -48,9 +52,5 @@ public enum Joueur {
         if (this == NOIR)
             return BLANC;
         return PERSONNE;
-    }
-
-    private void initialiserScore() {
-        score.set(0);
     }
 }
