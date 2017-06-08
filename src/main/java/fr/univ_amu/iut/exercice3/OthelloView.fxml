@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             xmlns="http://javafx.com/javafx"
-            fx:controller="fr.univ_amu.iut.exercice3.OthelloIHM">
+            fx:controller="fr.univ_amu.iut.exercice3.OthelloController">
     <top>
         <MenuBar fx:id="menuBar">
             <Menu text="Jeu">

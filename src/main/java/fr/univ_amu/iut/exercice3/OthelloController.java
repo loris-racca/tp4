@@ -1,14 +1,9 @@
 package fr.univ_amu.iut.exercice3;
 
-import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.MenuBar;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 import java.util.Optional;
@@ -16,19 +11,12 @@ import java.util.Optional;
 import static javafx.scene.control.Alert.AlertType;
 
 
-public class OthelloIHM extends Application {
+public class OthelloController {
     @FXML
     private StatusBar statusBar;
 
     @FXML
     private Othellier othellier;
-
-    @FXML
-    private MenuBar menuBar;
-
-    public static void main(String[] args) {
-        launch(args);
-    }
 
     @FXML
     void initialize() {
@@ -39,26 +27,13 @@ public class OthelloIHM extends Application {
         });
 
         statusBar.joueurCourantProperty().bind(othellier.joueurCourantProperty());
-
     }
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        primaryStage.setTitle("Othello");
-
-        try {
-            BorderPane root = FXMLLoader.load(getClass().getResource("/fr/univ_amu/iut/exercice3/OthelloIHM.fxml"));
-            primaryStage.setScene(new Scene(root));
-            primaryStage.show();
-
-            primaryStage.setOnCloseRequest(event -> {
-                this.actionMenuJeuQuitter();
-                event.consume();
-            });
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    void setStageAndSetupListeners(Stage stage) {
+        stage.setOnCloseRequest(event -> {
+            this.actionMenuJeuQuitter();
+            event.consume();
+        });
     }
 
     private void afficheDialogFinDePartie() {
