@@ -11,34 +11,21 @@ class Case extends Button {
     private ImageView imageView;
 
     public Case(int ligne, int colonne) {
-        this.colonne = colonne;
-        this.ligne = ligne;
-        this.possesseur = Joueur.PERSONNE;
-        this.imageView = new ImageView();
-
-        setMinSize(50, 50);
-        setPrefSize(50, 50);
-        setMaxSize(500, 500);
-
-        setGraphic(imageView);
-        imageView.fitHeightProperty().bind(this.heightProperty());
-        imageView.fitWidthProperty().bind(this.widthProperty());
+        throw new RuntimeException("Not yet implemented !");
     }
 
     public Joueur getPossesseur() {
-        return possesseur;
+        throw new RuntimeException("Not yet implemented !");
     }
 
     public void setPossesseur(Joueur possesseur) {
-        this.possesseur = possesseur;
-        imageView.setImage(possesseur.getImage());
     }
 
     public int getLigne() {
-        return ligne;
+        throw new RuntimeException("Not yet implemented !");
     }
 
     public int getColonne() {
-        return colonne;
+        throw new RuntimeException("Not yet implemented !");
     }
 }
