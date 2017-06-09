@@ -10,13 +10,13 @@
     * Consulter et/ou créér des [issues](https://github.com/IUTInfoAix-M2105/tp1/issues).
     * [Email](mailto:sebastien.nedjar@univ-amu.fr) pour une question d'ordre privée, ou pour convenir d'un rendez-vous physique.
 
-## TP 4 :  Ecriture d'un Reversi [![Build Status](https://travis-ci.com/IUTInfoAix-M2105/tp4.svg?token=zPXgu159amQhEb4ShTxW&branch=master)](https://travis-ci.com/IUTInfoAix-M2105/tp4)
+## TP 4 : FXML [![Build Status](https://travis-ci.com/IUTInfoAix-M2105/tp4.svg?token=zPXgu159amQhEb4ShTxW&branch=master)](https://travis-ci.com/IUTInfoAix-M2105/tp4)
 
 JavaFX 8.0 regroupe un ensemble d'API de Java 8 Standard Edition permettant le développement rapide d'applications graphiques modernes (aussi bien que des jeux 3D !). JavaFX 8.0 est tellement riche que sa 
 [documentation](https://docs.oracle.com/javase/8/javafx/api/toc.htm) se trouve à part de celle de 
 [Java 8](https://docs.oracle.com/javase/8/docs/api/index.html?overview-summary.html) (qui inclut celle de ses prédécesseurs AWT et Swing), bien qu'il fasse partie intégrante de Java 8.
 
-Ce TP continue l'exploration des mécanismes clefs de JavaFX 8.0.
+Ce TP continue l'exploration des mécanismes clefs de JavaFX 8.0 comme le FXML.
 
 #### Création de votre fork du TP
 
@@ -29,7 +29,7 @@ Vous apparaîtrez automatiquement comme contributeur de ce projet pour y pousser
 
 Une fois votre fork créé, il vous suffit de l'importer dans IntelliJ.
 
-### Première étape : écriture d'une IHM complète
+### Exercice 3 : Reversi
 
 L'objet de cet exercice est l'écriture en Java de l'IHM d'une version simplifiée du jeu Othello. C' est un jeu de société 
 combinatoire abstrait, qui oppose deux joueurs. 
@@ -107,10 +107,11 @@ devenant ainsi un pion Noir.
 |**7**|![][V]|![][V]|![][V]|![][V]|![][V]|![][V]|![][V]|![][V]|
 |**8**|![][V]|![][V]|![][V]|![][V]|![][V]|![][V]|![][V]|![][V]|
 
+
 #### Travail à réaliser
 Votre travail dans la suite de ce sujet sera d'écrire pas à pas plusieurs classes importantes :
 
-- Un objet `OthelloIHM` est une fenêtre de jeu avec laquelle les joueurs interagiront pour faire une partie à tour de rôle.
+- Un objet `OthelloMain` est une fenêtre de jeu avec laquelle les joueurs interagiront pour faire une partie à tour de rôle.
 
 - Un objet `Othellier` représente le plateau de jeu composé des 64 cases.
 
@@ -128,18 +129,18 @@ Le résultat attendu devra ressembler à la fenêtre suivante :
 ![IHM](src/main/resources/assets/screenshoot.png)
 
 
-#### Exercice 1 : Implémentation de la classe `Joueur`
+#### Etape 1 : Implémentation de la classe `Joueur`
 La classe `Joueur` permet de conserver les informations sur les deux joueurs d'une partie d'Othello. 
 Cette classe a la responsabilité principale de gérer le score des joueurs.
 
-1. Écrire la classe `Joueur` ayant pour commencer, deux données membres privées. La première appelée `score` sera de 
-  type `int`. La seconde `image` de type `Image` permettra de conserver l'image affichée dans les cases de l'othellier.
+1. Écrire la classe `Joueur` ayant pour commencer, deux données membres privées. La première appelée `score` sera une propriété de 
+  type `IntegerProperty`. La seconde `image` de type `Image` permettra de conserver l'image affichée dans les cases de l'othellier.
 
 2. Écrire le constructeur `Joueur(String fileName)` qui crée l'`Image` à partir du nom de fichier passé en paramètre
    et initialise le score à 0.
    
-3. Écrire les accesseurs `public int getScore()` et `public Icon getIcon()`  qui retournent la valeur des données 
-  membres correspondantes.
+3. Écrire les accesseurs `public int getScore()`, `public IntegerProperty scoreProperty()` et `public Image getImage()`  
+qui retournent la valeur des données membres correspondantes.
 
 4. Écrire les accesseurs `public void incrementerScore()`, `public void decrementerScore()` et 
 `private void setScore(int score)` qui permettent de modifier le score d'un joueur.
@@ -154,7 +155,7 @@ joueur est `BLANC`. L'appel de cette méthode sur tout autre joueur retourne `PE
 
 7. Écrire la méthode `public static void initialiserScores()` qui initialise à 0 les scores des joueurs `BLANC` et `NOIR`.
 
-#### Exercice 2 : Implémentation de la classe `Case`
+#### Etape 2 : Implémentation de la classe `Case`
 Pour réaliser le plateau de jeu, il nous faut des boutons qui se souviennent de leur position dans l'othellier. 
 Au moment de leur construction, de tels boutons reçoivent les valeurs des indices ligne et colonne 
 qui définissent leur placement dans la matrice. Ils les mémoriseront dans des variables d’instance privées. En 
@@ -176,14 +177,42 @@ correspondantes. Par défaut, une case n'appartient à PERSONNE.
 
 - Elle possède un setter `public void setPossesseur(Joueur possesseur)`, qui modifie la donnée membre correspondante et 
 modifie l'image du bouton en utilisant la méthode `setImage(Image image)` sur la donnée membre `imageView`.
+
+#### Etape 3 : Implémentation de la classe `StatusBar`
+La classe `StatusBar` est un composant graphique permettant d'afficher l'état de la partie en cours. L'affichage est 
+constitué de trois zones. Celle de gauche, affiche le score du joueur noir, celle de droite celle du joueur blanc et la 
+partie centrale un message qui indique le joueur courant.
+
+Nous allons écrire un composant spécialisé pour cette classe. Comme dans l'exercice 2, nous utiliserons FXML pour 
+concevoir ce composant. 
+
+Écrire le fichier FXML `StatusBarView.fxml` qui sera composé d'une racine de type `BorderPane`. Dans la zone gauche,
+placer un `Label` ayant pour `fx:id` la valeur `messageScoreNoir`. De même, au centre le panel devra avoir pour 
+`fx:id` la valeur `messageTourDeJeu` et à droite `messageScoreBlanc`.
+
+Ouvrir maintenant la classe `StatusBar` qui représentera le composant de la barre d'état de notre jeu. Cette classe aura les 
+caractéristiques suivantes :
+
+- Elle contient trois données membres du type `Label` qui seront à mettre en correspondance avec le fichier FXML.
+
+- Elle possèdera une propriété de type `ObjectProperty<Joueur>` nommée `joueurCourant` qui mémorisera le joueur qui doit 
+placer un pion.
+
+- Elle possèdera les accesseurs pour récupérer cette propriété.
+
+- La méthode `createBinding()` créera les bindings entre les labels droite et gauche et les scores des joueurs correspondants.
+ Le label central se liera à la propriété `joueurCourant` pour construire son texte.
  
-#### Exercice 3 : Implémentation de la classe `Othellier`
+- Le constructeur de la classe, devra charger comme il se doit le fichier FXML. Vous pouvez vous inspirer du code donné 
+à l'exercice 2.
+ 
+#### Etape 4 : Implémentation de la classe `Othellier`
 Cette classe est celle qui permet d'implémenter toute la logique du jeu. 
 
 1. Écrire la classe `Othellier` qui dérive de `GridPane`. Cette classe aura les données membres privées suivantes : 
      - `taille` de type `int` qui mémorise la taille du plateau de jeu.
      - `cases` est une matrice de `taille x taille` `Case` qui représente le plateau de jeu.
-     - `joueurCourant` de type `Joueur` qui mémorise le joueur dont c'est le tour.
+     - `joueurCourant` de type `ObjectProperty<Joueur>` qui mémorise le joueur dont c'est le tour.
      
 2. Écrire la méthode `private void vider()` qui parcourt toutes les cases une par une et les affecte à `PERSONNE`.
 
@@ -224,12 +253,12 @@ toute les cases capturables à partir de cette case. Cette méthode s'occupe aus
 le score de chaque joueur pour maintenir le score à jour.
 
 10. On s’intéresse maintenant à ce qui doit se passer lorsqu’un joueur appuie sur un bouton. Pour cela, vous allez écrire 
-une classe implémentant l’interface `ActionListener`. Cette classe aura une unique instance utilisée comme auditeur de 
+une classe implémentant l’interface `EventHandler<ActionEvent>`. Cette classe aura une unique instance utilisée comme auditeur de 
 tous les « événements action » produits par les boutons du jeu.
 
-Écrivez une classe `AuditeurCase`, interne à la classe `Othellier`, implémentant l’interface `ActionListener`. 
+Écrivez une classe `AuditeurCase`, interne à la classe `Othellier`, implémentant l’interface `EventHandler<ActionEvent>`. 
 
-Cette classe se réduit à la méthode imposée `public void actionPerformed(ActionEvent evt)`, qui doit effectuer les tâches suivantes :
+Cette classe se réduit à la méthode imposée `public void handle(ActionEvent evt)`, qui doit effectuer les tâches suivantes :
     
    - identifier le bouton ayant produit l’événement (pensez à la méthode `getSource()` du paramètre `evt`).
     
@@ -245,50 +274,70 @@ On notera qu'une unique instance de cette classe doit être ajoutée comme audit
 capturables si le `joueurCourant` dépose un jeton sur la case `caseSelectionnee`. Cette méthode vérifie dans toute 
 les directions quel est l'ensemble des cases capturables.
 
-#### Exercice 4 : Implémentation de la classe `StatusBar`
-La classe `StatusBar` est un composant graphique permettant d'afficher l'état de la partie en cours. 
+#### Exercice 5 : Implémentation de la classe `OthelloController`
+La classe `OthelloController` et le fichier FXML `OthelloView` représentent le contenu de la fenêtre principale du Jeu. 
+En plus d'un othellier situé au centre, cette scène contient une barre de menu et une barre de statut en bas. La barre 
+de menu contient un menu "Action" constitué d'une entrée "Nouvelle Partie" et d'une entrée "Quitter".
 
-#### Exercice 5 : Implémentation de la classe `OthelloIHM`
-La classe `OthelloIHM` représente la fenêtre principale du Jeu. En plus d'un othellier situé au centre, cette fenêtre 
-contient une barre de menu et une barre de statut en bas. La barre de menu contient un menu "Action" constitué d'une 
-entrée "Nouvelle Partie" et d'une entrée "Quitter".
-
-1. Écrire la déclaration d’une classe `OthelloIHM`, sous-classe de `Application`, réduite, pour commencer, à 
+1. Écrire la déclaration d’une classe `OthelloController`, réduite, pour commencer, à 
 ses variables d’instance, toutes privées :
-    - `TAILLE` de type `int` représente la taille l'othellier
 
     - `statusBar` de type `StatusBar` est l'objet matérialisant la barre de statut
 
     - `othellier` de type `Othellier` est l'objet plateau de jeu
 
-2. Écrire la méthode  `private MenuBar barreDeMenus()` qui s'occupe de créer la barre de menu.
+2. Écrire le ficher FXML décrivant la structure de l'IHM de notre jeu. La racine de la scène sera un objet du 
+type `BorderPane` qui contiendra une `MenuBar`, un `Othelier` et une `StatusBar`. Rajouter les bonnes valeurs 
+aux attibuts `fx:id` pour que les données membres du controlleur soient en correspondance avec les composants associés.
 
-3. Écrire le constructeur par défaut de la classe `OthelloIHM`. Ce constructeur devra :
+
+3. Écrire la méthode `public void initialize()` qui sera appelée par le `loader` lors du chargement du FXML. 
+Cette méthode devra :
+
+    - tout d'abord ajouter un écouteur sur la propriété `joueurCourant` de l'othelier pour vérifier si le `joueurCourant` 
+    est positionné à `PERSONNE` pour ouvrir un dialogue annonçant la fin de partie avec la méthode `afficheDialogFinDePartie`.
+
+    - lier le `joueurCourant` de la `statusBar` avec celui de l'othelier pour que la barre d'état adapte son contenu à 
+    chaque étape du jeu.
+
+4. Écrire la méthode `public void actionMenuJeuNouveau()` qui sera appelée par l'item de menu permettant de créer une 
+nouvelle partie. Cette méthode devra prévenir l'utilisateur avec une fenêtre de confirmation pour lui demander s'il est 
+certain de vouloir créer une nouvelle partie en arrétant celle en cours. Pour cela, vous utiliserez la classe `Alert` 
+avec un titre et un contenu adapté. Si l'utilisateur répond `OK`, une nouvelle partie est créée en appelant la méthode 
+`nouvellePartie()` de l'othelier.
+
+5. Écrire la méthode `public void actionMenuJeuQuitter()` qui sera appelée par l'item de menu permettant de quitter le jeu.
+Cette méthode devra prévenir l'utilisateur avec une fenêtre de confirmation. Pour cela, vous utiliserez la classe `Alert` 
+avec un titre et un contenu adapté. Si l'utilisateur répond `OK`, le programme se termine proprement en appelant la 
+méthode `Platform.exit();`.
+
+6. Écrire la méthode `setStageAndSetupListeners(Stage stage)` qui rajoutera un écouteur d'événement à la fermeture de la 
+fenêtre principale (voir `setOnCloseRequest()`). Cet écouteur se comportera comme l'action Quitter du menu. Si 
+l'utilisateur ne valide pas, l'événement sera consomé (`event.consume()`) pour empécher la fermeture de la fenêtre.
+
+
+7. Ecrire la méthode  `afficheDialogFinDePartie()` qui affiche une fenêtre d'information qui indiquera le vainqueur de 
+la partie courante. Pour cela, vous utiliserez la classe `Alert` avec un titre et un contenu adapté. Le dialogue sera 
+affiché et attendra que l'utilisateur le ferme.
+
+#### Exercice 6 : Implémentation de la classe `OthelloMain`
+La classe `OthelloMain` est le programme principal de notre application. C'est elle qui a la responsabilité de 
+charger la vue principale et de l'ajouter à la scène.
+
+1. Écrivez une méthode `main` aussi réduite que possible pour lancer l’exécution de tout cela.
+
+
+2. Écrire la méthode `public void start(Stage primaryStage)`. Elle devra :
     - Modifier le titre de la fenêtre en "Othello".
 
-    - Ajouter un `BorderPane` comme gestionnaire de disposition.
+    - Créer un objet `loader` du type `FXMLLoader` et charger le `BorderPane` principal à partir du fichier `OthelloView.fxml`.
+    
+    - Récupérer le controleur du type `OthelloController` avec la méthode `getController()` du `loader`.
+    
+    - Appeler la méthode `setStageAndSetupListeners()` de la classe `OthelloController` qui rajoutera l'écouteur d'événement de fermeture de la fenêtre principale.
 
-    - Ajouter la barre de menu en haut.
-
-    - Placer l'othellier au centre .
-
-    - Placer la barre de statut en bas.
+    - Ajouter le `BorderPane` comme racine du graphe de scène.
 
     - Rendre visible le stage.
-
-4. Écrire la méthode `public void updateStatus()` qui s'occupe de mettre à jour la barre de statut à partir de l'état 
-courant de l'othellier. Cette méthode devra :
-
-    - tout d'abord vérifier si le `joueurCourant` de l'othellier est positionné à `PERSONNE` pour ouvrir un dialogue annonçant la fin de partie
-
-    - changer le `joueurCourant` de la `statusBar`
-
-    - appeler la méthode `updateStatus()` de la `statusBar`
-
-5. Écrivez une méthode `main` aussi réduite que possible pour lancer l’exécution de tout cela.
-
-
-
-
 
 
