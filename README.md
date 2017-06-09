@@ -29,6 +29,189 @@ Vous apparaîtrez automatiquement comme contributeur de ce projet pour y pousser
 
 Une fois votre fork créé, il vous suffit de l'importer dans IntelliJ.
 
+### Exercice 1 : Création de l'IHM d'une application en FXML
+
+Avec JavaFX, les interfaces peuvent être créées de deux manières :
+
+  * Procédurale : en écrivant du code Java qui fait appel aux API de la plateforme et qui utilise les composants/conteneurs à
+disposition (classes et interfaces)
+
+  * Déclarative : en décrivant l'interface dans un fichier au format FXML qui sera ensuite chargé dynamiquement dans l'application
+
+Au centre de l'approche déclarative, se trouvent les fichiers FXML. Un fichier FXML est un fichier au format XML dont la syntaxe est conçue pour décrire l'interface (la vue) avec ses composants, ses
+conteneurs, sa disposition, …
+
+  * Le fichier FXML décrit le "quoi" mais pas le "comment"
+
+A l'exécution, le fichier FXML sera chargé par l'application (classe `FXMLLoader`) et un objet Java sera créé (généralement la racine est un conteneur) avec les éléments que le fichier décrit (les composants, conteneurs, graphiques, …).
+Il est possible de créer les fichiers FXML avec un éditeur de texte mais, plus généralement, on utilise un outil graphique (*SceneBuilder*)
+qui permet de concevoir l'interface de manière conviviale et de générer automatiquement le fichier FXML correspondant.
+
+
+Les objets créés par le chargement de fichiers FXML peuvent être assignés à la racine d'un graphe de scène ou représenter un des nœuds dans un graphe de scène créé de manière procédurale.
+Une fois chargés, les nœuds issus de fichiers FXML sont totalement équivalents à ceux créés de manière procédurale. Les mêmes
+opérations et manipulations peuvent leur être appliquées.
+
+Même si certaines possibilités existent (en lien notamment avec du code JavaScript) on conseille généralement d'utiliser 
+les fichiers FXML exclusivement pour décrire les interfaces, et d'effectuer tous les traitements (activité des contrôleurs) d
+ans le code Java.
+
+
+Lors du chargement du fichier FXML, son contenu est interprété et des objets Java correspondants sont créés.
+
+Par exemple, l'élément :
+
+```xml
+<BorderPane prefHeight="80.0" prefWidth="250.0" ...>
+```
+sera interprété comme :
+
+```java
+BorderPane rootPane = new BorderPane();
+rootPane.setPrefHeight(80.0);
+rootPane.setPrefWidth(250.0);
+```
+
+Quand un attribut commence par le nom d'une classe suivi d'un point et d'un identificateur, par exemple :
+
+```xml
+<TextField GridPane.columnIndex="3" . . . >
+```
+
+l'attribut sera interprété comme une invocation de méthode statique :
+
+```java
+TextField tfd = new TextField();
+GridPane.setColumnIndex(tfd, 3);
+```
+
+Pour les propriétés qui ne peuvent pas facilement être représentées par une chaîne de caractères, un élément est 
+imbriqué (plutôt que de déclarer des attributs).
+
+Par exemple, si l'on considère l'élément :
+```xml
+<Label id="title" fx:id="title" text="Titre" textFill="#0022cc"
+BorderPane.alignment="CENTER">
+<font>
+<Font name="SansSerif Bold" size="20.0" />
+</font>
+</Label>
+```
+On constate que la propriété `Font` est codée comme un élément imbriqué dans l'élément Label. Pour les propriétés de type liste (par exemple `children`), les éléments de la liste sont simplement imbriqués et 
+répétés dans l'élément représentant la liste (par exemple, les composants enfants seront listés entre les balises `<children>` et `</children>`).
+
+
+Le lien entre les composants décrits dans le fichier FXML et le programme est établi par les attributs `fx:id` :
+```xml
+<Label id="title" fx:id="title" text="Titre" textFill="#0022cc" ...>
+```
+
+L'attribut `fx:id` fonctionne en lien avec l'annotation `@FXML` que l'on peut utiliser dans les contrôleurs, et qui 
+va indiquer au système que le composant avec le nom `fx:id` pourra être injecté dans l'objet correspondant de la 
+classe contrôleur.
+
+```java
+public class SayHelloController {
+   @FXML
+   private Button btnHello;
+   @FXML // fx:id="title"
+   private Label title; // Object injected by FXMLLoader
+```
+
+
+La classe qui joue le rôle de contrôleur pour une interface déclarée en FXML doit être annoncée dans l'élément racine, 
+en utilisant l'attribut `fx:controller` :
+```xml
+<BorderPane prefHeight="80.0" prefWidth="250.0"
+style="-fx-background-color: #FFFCAA;"
+xmlns=http://javafx.com/javafx/8
+xmlns:fx=http://javafx.com/fxml/1
+fx:controller="SayHelloController">
+...
+```
+
+Pour les composants actifs déclarés dans une interface en FXML, on peut indiquer la méthode du contrôleur qui doit être invoquée en
+utilisant l'attribut `fx:onEvent="#methodName"` :
+
+```xml
+<Button fx:id="btnHello" onAction="#handleButtonAction" 
+      text="Say Hello" BorderPane.alignment="CENTER" />
+```
+
+Dans la classe contrôleur, ces méthodes devront (comme les composants associés) être annotées avec `@FXML`.
+
+```java
+@FXML
+private void handleButtonAction(ActionEvent event) {
+   title.setText("Hello !");
+   title.setTextFill(Color.FUCHSIA);
+}
+```
+
+Dans les classes qui agissent comme "contrôleurs", on peut définir une méthode `initialize()` (qui doit être annotée 
+avec `@FXML`) pour effectuer certaines initialisations.
+
+- Cette méthode est automatiquement invoquée après le chargement du fichier FXML.
+
+- Elle peut être utile pour initialiser certains composants, en faisant par exemple appel au modèle.
+
+```java
+@FXML
+private void initialize() {
+   cbbCountry.getItems().addAll("Allemagne", "Angleterre", "Belgique",
+         "Espagne", "France", "Italie",
+         "Pays-Bas", "Portugal", "Suisse");
+   lstProducts.getItems().addAll(model.getProducts());
+. . .
+}
+```
+
+Il est possible d'accéder au contrôleur associé au fichier FXML en créant un chargeur (loader) pour ce fichier (plutôt que d'utiliser la
+méthode statique `FXMLLoader.load()`). Cela peut être utile pour avoir accès au contrôleur, par exemple pour
+lui communiquer la référence du modèle de l'application 
+   ```java
+   public void start(Stage primaryStage) throws Exception {
+         //--- Chargement du fichier FXML et recherche du contrôleur associé
+         FXMLLoader loader = new FXMLLoader(getClass().getResource("SayHello.fxml"));
+         BorderPane root = loader.load();
+         SayHelloController ctrl = loader.getController();
+         ctrl.setModel(model);
+         Scene scene = new Scene(root);
+   ```
+#### Travail à réaliser
+- Aller dans le paquetage `exercice1` et ouvrir les trois fichier qui s'y trouvent.
+
+- Lancer la classe `CounterMain` pour observer et comprendre le fonctionnement du chargement d'une IHM décrite en FXML.
+
+- Remplacer le binding du texte du label fait en FXML (`text="${controller.counter}"`) par un binding programmatique.
+
+- Rajouter un second bouton pour décrémenter la valeur de la propriété `counter`.
+
+- En cliquant dans l'onglet *Scene Buider* en bas de l'éditeur FXML, personnalisez l'affichage de votre fenêtre en 
+changeant la couleur de fond et la taille de la police des différents boutons.
+
+### Exercice 2 : Création d'un composant personnalisé en FXML
+Dans cet exercice, nous allons voir comment créer des composants personnalisés avec du FXML. La création de nouveau 
+composant peut être nécessaire pour modulariser une IHM. En plus de mieux découper le code en ensembles cohérents et 
+maîtrisables, chaque composant pourra être ainsi réutilisé par la suite dans un autre contexte. 
+
+Le composant que nous allons créer sera un classique écran de login. La principale différence entre un composant 
+personnalisé et une IHM quelconque en FXML se situe au niveau de nœud principal. Le parent utilisera un nœud 
+`<fx:root>` dans ce nœud, il devra indiquer le type de cette racine et ne surtout pas préciser le controleur.
+
+Dans le code du composant, notre composant devra étendre le type indiqué dans le nœud `<fx:root>`. Le chargement du 
+FMXL interviendra directement dans le constructeur par défaut. Il faudra préciser à ce moment là que l'objet courant 
+sera à la fois la racine (`setRoot()`) et le contrôleur (`setController()`) de la vue FXML.
+
+Les propriétés exposées par le composant devront posséder des accesseurs publiques.
+
+#### Travail à réaliser
+- Aller dans le paquetage `exercice2` et ouvrir les trois fichier qui s'y trouvent.
+
+- Lancer la classe `LoginMain` pour observer et comprendre le fonctionnement du chargement d'une IHM décrite en FXML.
+
+- Ajouter une feuille de style pour personnaliser l'affichage de votre composant.
+
 ### Exercice 3 : Reversi
 
 L'objet de cet exercice est l'écriture en Java de l'IHM d'une version simplifiée du jeu Othello. C' est un jeu de société 
@@ -139,7 +322,7 @@ Cette classe a la responsabilité principale de gérer le score des joueurs.
 2. Écrire le constructeur `Joueur(String fileName)` qui crée l'`Image` à partir du nom de fichier passé en paramètre
    et initialise le score à 0.
    
-3. Écrire les accesseurs `public int getScore()`, `public IntegerProperty scoreProperty()` et `public Image getImage()`  
+3. Écrire les accesseurs `public int getScore()`, `public IntegerProperty scoreProperty()` et `public Image getImage()`
 qui retournent la valeur des données membres correspondantes.
 
 4. Écrire les accesseurs `public void incrementerScore()`, `public void decrementerScore()` et 
@@ -195,10 +378,10 @@ caractéristiques suivantes :
 
 - Elle contient trois données membres du type `Label` qui seront à mettre en correspondance avec le fichier FXML.
 
-- Elle possèdera une propriété de type `ObjectProperty<Joueur>` nommée `joueurCourant` qui mémorisera le joueur qui doit 
+- Elle possédera une propriété de type `ObjectProperty<Joueur>` nommée `joueurCourant` qui mémorisera le joueur qui doit 
 placer un pion.
 
-- Elle possèdera les accesseurs pour récupérer cette propriété.
+- Elle possédera les accesseurs pour récupérer cette propriété.
 
 - La méthode `createBinding()` créera les bindings entre les labels droite et gauche et les scores des joueurs correspondants.
  Le label central se liera à la propriété `joueurCourant` pour construire son texte.
@@ -288,7 +471,7 @@ ses variables d’instance, toutes privées :
 
 2. Écrire le ficher FXML décrivant la structure de l'IHM de notre jeu. La racine de la scène sera un objet du 
 type `BorderPane` qui contiendra une `MenuBar`, un `Othelier` et une `StatusBar`. Rajouter les bonnes valeurs 
-aux attibuts `fx:id` pour que les données membres du controlleur soient en correspondance avec les composants associés.
+aux attributs `fx:id` pour que les données membres du contrôleur soient en correspondance avec les composants associés.
 
 
 3. Écrire la méthode `public void initialize()` qui sera appelée par le `loader` lors du chargement du FXML. 
@@ -302,7 +485,7 @@ Cette méthode devra :
 
 4. Écrire la méthode `public void actionMenuJeuNouveau()` qui sera appelée par l'item de menu permettant de créer une 
 nouvelle partie. Cette méthode devra prévenir l'utilisateur avec une fenêtre de confirmation pour lui demander s'il est 
-certain de vouloir créer une nouvelle partie en arrétant celle en cours. Pour cela, vous utiliserez la classe `Alert` 
+certain de vouloir créer une nouvelle partie en arrêtant celle en cours. Pour cela, vous utiliserez la classe `Alert` 
 avec un titre et un contenu adapté. Si l'utilisateur répond `OK`, une nouvelle partie est créée en appelant la méthode 
 `nouvellePartie()` de l'othelier.
 
@@ -313,10 +496,10 @@ méthode `Platform.exit();`.
 
 6. Écrire la méthode `setStageAndSetupListeners(Stage stage)` qui rajoutera un écouteur d'événement à la fermeture de la 
 fenêtre principale (voir `setOnCloseRequest()`). Cet écouteur se comportera comme l'action Quitter du menu. Si 
-l'utilisateur ne valide pas, l'événement sera consomé (`event.consume()`) pour empécher la fermeture de la fenêtre.
+l'utilisateur ne valide pas, l'événement sera consommé (`event.consume()`) pour empêcher la fermeture de la fenêtre.
 
 
-7. Ecrire la méthode  `afficheDialogFinDePartie()` qui affiche une fenêtre d'information qui indiquera le vainqueur de 
+7. Écrire la méthode `afficheDialogFinDePartie()` qui affiche une fenêtre d'information qui indiquera le vainqueur de 
 la partie courante. Pour cela, vous utiliserez la classe `Alert` avec un titre et un contenu adapté. Le dialogue sera 
 affiché et attendra que l'utilisateur le ferme.
 
@@ -332,7 +515,7 @@ charger la vue principale et de l'ajouter à la scène.
 
     - Créer un objet `loader` du type `FXMLLoader` et charger le `BorderPane` principal à partir du fichier `OthelloView.fxml`.
     
-    - Récupérer le controleur du type `OthelloController` avec la méthode `getController()` du `loader`.
+    - Récupérer le contrôleur du type `OthelloController` avec la méthode `getController()` du `loader`.
     
     - Appeler la méthode `setStageAndSetupListeners()` de la classe `OthelloController` qui rajoutera l'écouteur d'événement de fermeture de la fenêtre principale.
 

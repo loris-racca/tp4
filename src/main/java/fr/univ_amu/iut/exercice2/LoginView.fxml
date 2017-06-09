@@ -3,7 +3,6 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
-<?import java.net.URL?>
 <fx:root xmlns:fx="http://javafx.com/fxml"
          type="javafx.scene.layout.GridPane" styleClass="root" vgap="20" hgap="100" alignment="CENTER">
     <Text id="welcome-text" text="Welcome"
@@ -27,8 +26,4 @@
             <Button fx:id="cancelBtn" text="Cancel" onAction="#cancelClicked"/>
         </children>
     </HBox>
-
-    <stylesheets>
-        <URL value="@Login.css"/>
-    </stylesheets>
 </fx:root>
