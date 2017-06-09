@@ -22,7 +22,7 @@
             <font>
                <Font name="System Bold Italic" size="11.0" />
             </font></Button>
-            <Button fx:id="decrementButton" onAction="#Decrement" text="Click to decrement" textFill="#3e21fc">
+            <Button fx:id="decrementButtons" onAction="#Decrement" text="Click to decrement" textFill="#3e21fc">
             <font>
                <Font name="System Bold Italic" size="24.0" />
             </font></Button>
