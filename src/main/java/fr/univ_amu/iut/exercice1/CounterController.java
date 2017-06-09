@@ -26,14 +26,16 @@ public class CounterController implements Initializable {
     public void increment(ActionEvent actionEvent) {
         counter.set(counter.get() + 1);
     }
+    public void Decrement(ActionEvent actionEvent) {
+        counter.set(counter.get() - 1);
+    }
 
     public int getCounter() {
         return counter.get();
     }
 
     public void setCounter(int counter) {
-        this.counter.set(counter);
-    }
+        this.counter.set(counter);}
 
     public IntegerProperty counterProperty() {
         return counter;
@@ -44,5 +46,7 @@ public class CounterController implements Initializable {
         System.out.println("Initializing SayHelloController...");
         System.out.println("Location = " + location);
         System.out.println("Resources = " + resources);
+
+        counterLabel.textProperty().bind(counter.asString());
     }
 }
